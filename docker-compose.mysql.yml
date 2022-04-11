@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  mysql:
+    container_name: local_mysql
+    platform: linux/x86_64
+    image: mysql:latest
+    restart: always
+    networks:
+      - traefik
+      - default
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./.docker/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-password}
+
+networks:
+  traefik:
+    external:
+      name: ${NETWORK:-local_infra}

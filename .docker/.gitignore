@@ -1,0 +1,6 @@
+redis/*
+mysql/*
+mongo/*
+minio/*
+mariadb/*
+traefik/certs/*

@@ -1,0 +1,30 @@
+version: '3.5'
+
+services:
+  traefik:
+    container_name: traefik
+    image: traefik:v2.4.7
+    restart: always
+    networks:
+      - traefik
+      - default
+    ports:
+      - "80:80"
+      - "443:443"
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      traefik.enable: true
+      traefik.http.routers.traefik: true
+      traefik.http.routers.traefik.tls: ${SECURE_ENABLED:-false}
+      traefik.http.services.traefik.loadbalancer.server.port: 8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./.docker/traefik/dynamic_conf.yaml:/etc/traefik/dynamic_conf.yaml:ro
+      - ./.docker/traefik/traefik.yaml:/etc/traefik/traefik.yaml:ro
+      - ./.docker/traefik/certs:/etc/certs:ro
+
+networks:
+  traefik:
+    external:
+      name: ${NETWORK:-local_infra}
